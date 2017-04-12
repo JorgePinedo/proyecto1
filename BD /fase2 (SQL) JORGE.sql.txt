@@ -1,0 +1,152 @@
+/* Buscar un centro por codigo */
+create or replace procedure buscar_centro (
+  proce_cod IN CENTRO_TRABAJO.COD_CENTRO%type,
+  proce_nom OUT centro_trabajo.nombre_centro%type,
+  proce_calle OUT centro_trabajo.calle_centro%type,
+  proce_num OUT centro_trabajo. numero_centro%type,
+  proce_cod_pos OUT centro_trabajo.codigo_postal_centro%type,
+  proce_ciudad OUT centro_trabajo.ciudad_centro%type,
+  proce_provincia OUT centro_trabajo.provincia_centro%type,
+  proce_telf OUT centro_trabajo. telefono_centro%type
+)
+as
+Begin
+select  nombre_centro, calle_centro, numero_centro,
+        codigo_postal_centro, ciudad_centro, provincia_centro,
+        telefono_centro
+into    proce_nom, proce_calle, proce_num,
+        proce_cod_pos, proce_ciudad, proce_provincia,
+        proce_telf  
+from  centro_trabajo
+where cod_centro=p_cod;
+
+EXCEPTION   
+ when NO_DATA_FOUND
+  then raise_application_error(-20001,'No existe el centro');
+    
+END buscar_centro;
+ 
+
+
+/* Buscar todos los centro */
+create or replace procedure buscar_todos_centros (
+  proce_cod OUT CENTRO_TRABAJO.COD_CENTRO%type,
+  proce_nom OUT centro_trabajo.nombre_centro%type,
+  proce_calle OUT centro_trabajo.calle_centro%type,
+  proce_num OUT centro_trabajo. numero_centro%type,
+  proce_cod_pos OUT centro_trabajo.codigo_postal_centro%type,
+  proce_ciudad OUT centro_trabajo.ciudad_centro%type,
+  proce_provincia OUT centro_trabajo.provincia_centro%type,
+  proce_telf OUT centro_trabajo. telefono_centro%type
+)
+as
+Begin
+select  cod_centro, nombre_centro, calle_centro,
+        numero_centro, codigo_postal_centro, ciudad_centro,
+        provincia_centro, telefono_centro
+into    proce_cod, proce_nom, proce_calle,
+        proce_num, proce_cod_pos, proce_ciudad,
+        proce_provincia, proce_telf  
+from centro_trabajo;
+ 
+EXCEPTION   
+ when NO_DATA_FOUND
+  then raise_application_error(-20001,'No existe ningún centro');
+   
+END buscar_todos_centros;
+ 
+
+
+/* Buscar trabajador po dni */ 
+create or replace procedure buscar_trabajador (
+proce_dni IN trabajador.dni_trabajador%type,
+proce_nom OUT trabajador.nombre_trabajador%type,
+proce_apellido1 OUT trabajador.apellido1_trabajador%type,
+proce_apellido2 OUT trabajador.apellido2_trabajador%type,
+proce_calle OUT trabajador.calle_trabajador%type,
+proce_portal OUT trabajador.portal_trabajador%type,
+proce_piso OUT trabajador.piso_trabajador%type,
+proce_mano OUT trabajador.mano_trabajador%type,
+proce_telf_per OUT trabajador.telefono_personal_trabajador%type,
+proce_telf_empre OUT trabajador.telefono_empresa_trabajador%type,
+proce_salario OUT trabajador.salario_trabajador%type,
+proce_fec_naci OUT trabajador.fecha_nacimiento_trabajador%type,
+proce_usuario OUT trabajador.usuario%type
+)
+as
+BEGIN
+select  nombre_trabajador, apellido1_trabajador, apellido2_trabajador,
+        calle_trabajador, portal_trabajador, piso_trabajador,
+        mano_trabajador, telefono_personal_trabajador, telefono_empresa_trabajador,
+        salario_trabajador, fecha_nacimiento_trabajador, usuario
+into    proce_nom, proce_apellido1, proce_apellido2,
+        proce_calle, proce_portal, proce_piso,
+        proce_mano, proce_telf_per, proce_telf_empre,
+        proce_salario, proce_fec_naci, proce_usuario
+from trabajador 
+where dni_trabajador=p_dni;
+ 
+EXCEPTION
+  when NO_DATA_FOUND
+  then raise_application_error(-20001,'No existe el trabajador');
+   
+END buscar_trabajador;
+ 
+
+
+ /* Buscar todos los trabjadores */
+create or replace procedure buscar_todos_trabajadores (
+proce_dni OUT trabajador.dni_trabajador%type,
+proce_nom OUT trabajador.nombre_trabajador%type,
+proce_apellido1 OUT trabajador.apellido1_trabajador%type,
+proce_apellido2 OUT trabajador.apellido2_trabajador%type,
+proce_calle OUT trabajador.calle_trabajador%type,
+proce_portal OUT trabajador.portal_trabajador%type,
+proce_piso OUT trabajador.piso_trabajador%type,
+proce_mano OUT trabajador.mano_trabajador%type,
+proce_telf_per OUT trabajador.telefono_personal_trabajador%type,
+proce_telf_empre OUT trabajador.telefono_empresa_trabajador%type,
+proce_salario OUT trabajador.salario_trabajador%type,
+proce_fec_naci OUT trabajador.fecha_nacimiento_trabajador%type,
+proce_usuario OUT trabajador.usuario%type
+)
+as
+BEGIN
+select  dni_trabajador, nombre_trabajador, apellido1_trabajador,
+        apellido2_trabajador, calle_trabajador, portal_trabajador,
+        piso_trabajador, mano_trabajador, telefono_personal_trabajador,
+        telefono_empresa_trabajador, salario_trabajador, fecha_nacimiento_trabajador,
+        usuario
+into    proce_dni, proce_nom, proce_apellido1,
+        proce_apellido2, proce_calle, proce_portal,
+        proce_piso, proce_mano, proce_telf_per,
+        proce_telf_empre, proce_salario, proce_fec_naci,
+        proce_usuario
+         
+from trabajador;    
+ 
+EXCEPTION
+  when NO_DATA_FOUND
+  then raise_application_error(-20001,'No existe ningún trabajador');
+   
+END buscar_todos_trabajadores;
+
+
+ 
+ /* Logearte */
+create or replace procedure login (
+p_usuario IN trabajador.usuario%type,
+p_contraseña IN trabajador.contraseña%type,
+p_num OUT INTEGER
+)
+as
+BEGIN
+select count(*) into p_num
+from trabajador 
+where USUARIO=p_usuario and CONTRASEÑA =p_contraseña;
+ 
+EXCEPTION
+  when NO_DATA_FOUND
+  then raise_application_error(-20001,'Usuario no existe o contraseña incorrecta');
+   
+END login;
